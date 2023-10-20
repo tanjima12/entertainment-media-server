@@ -27,6 +27,7 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     const productCollection = client.db("productDb").collection("mainProduct");
+    const cartCollection = client.db("productDb").collection("cardProduct");
 
     app.get("/product", async (req, res) => {
       const cursor = productCollection.find();
@@ -47,6 +48,22 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+    //details get
+
+    app.get("/productDetails/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await productCollection.findOne(query);
+
+      // const BrandName = req.params.BrandName;
+      // const query = { brandName: new ObjectId(BrandName) };
+      // console.log(query);
+      // const result = await productCollection.findOne(query);
+      // console.log(result);
+      res.send(result);
+      // const result = await cursor.toArray();
+      // res.send(result);
+    });
     app.get("/updateProduct/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
@@ -55,6 +72,7 @@ async function run() {
       console.log(result);
       res.send(result);
     });
+
     //update
     app.put("/updated/:id", async (req, res) => {
       const id = req.params.id;
@@ -78,6 +96,14 @@ async function run() {
       res.send(result);
     });
 
+    //add to cart
+
+    app.post("/cartProduct", async (req, res) => {
+      const product = req.body;
+      console.log(product);
+      const result = await cartCollection.insertOne(product);
+      res.send(result);
+    });
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(

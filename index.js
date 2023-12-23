@@ -24,8 +24,6 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
     const productCollection = client.db("productDb").collection("mainProduct");
     const cartCollection = client.db("productDb").collection("cardProduct");
 
@@ -55,14 +53,7 @@ async function run() {
       const query = { _id: new ObjectId(id) };
       const result = await productCollection.findOne(query);
 
-      // const BrandName = req.params.BrandName;
-      // const query = { brandName: new ObjectId(BrandName) };
-      // console.log(query);
-      // const result = await productCollection.findOne(query);
-      // console.log(result);
       res.send(result);
-      // const result = await cursor.toArray();
-      // res.send(result);
     });
     app.get("/updateProduct/:id", async (req, res) => {
       const id = req.params.id;
